@@ -38,6 +38,12 @@
     <main>
         <section class="login-form">
             <h2>登入</h2>
+            <?php
+            // 檢查是否有錯誤訊息
+            if (isset($_GET['error'])) {
+                echo '<p style="color: red;">' . htmlspecialchars($_GET['error']) . '</p>';
+            }
+            ?>
             <form action="process-login.php" method="POST">
                 <div class="input-group">
                     <label for="username">帳號：</label>
@@ -51,7 +57,9 @@
                 
                 <div class="submit-group">
                     <button type="submit">登入</button>
+                    <button type="button" class="register-btn" onclick="handleRegister()">註冊</button>
                 </div>
+                
             </form>
         </section>
     </main>
@@ -62,3 +70,10 @@
     </footer>
 </body>
 </html>
+<script>
+    function handleRegister() {
+        //alert('導向註冊流程或顯示註冊表單');
+        // 或者可以跳轉到註冊頁面
+        window.location.href = "register.php";
+    }
+</script>

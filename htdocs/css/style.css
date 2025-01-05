@@ -704,3 +704,25 @@ main {
     background-color: #45a049; /* 當滑鼠滑過時改為較深的綠色 */
 }
 
+.register-btn {
+    background-color: #007bff; /* 藍色 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px; /* 橢圓形 */
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px; /* 與登入按鈕保持間距 */
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #0056b3; /* 滑鼠懸停時深藍色 */
+}
+
+/* 調整登入按鈕和註冊按鈕容器的對齊方式 */
+.submit-group {
+    display: flex;
+    justify-content: center; /* 讓按鈕位於中心 */
+    gap: 10px; /* 增加按鈕間的間距 */
+}
