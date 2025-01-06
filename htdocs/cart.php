@@ -32,8 +32,6 @@ if (isset($_GET['action'], $_GET['id'])) {
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* 購物車頁面風格 */
-        /* 購物車頁面風格 */
-/* 購物車頁面風格 */
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
@@ -141,12 +139,12 @@ if (isset($_GET['action'], $_GET['id'])) {
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .checkout-btn:hover {
             background-color: #e55b4e;
         }
-
 
     </style>
 </head>
@@ -212,7 +210,8 @@ if (isset($_GET['action'], $_GET['id'])) {
                 return $item['price'] * $item['quantity'];
             }, $cartItems)), 0) ?></p>
 
-            <button class="checkout-btn">結帳</button>
+            <!-- 結帳連結 -->
+            <a href="payment.php" class="checkout-btn">結帳</a>
         <?php endif; ?>
     </main>
 

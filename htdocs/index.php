@@ -21,7 +21,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     <!-- Header -->
     <header class="navbar">
         <div class="logo">
-            <a href="#">CowPee購物</a>
+            <a href="index.php">CowPee購物</a>
         </div>
         <form action="search.php" method="GET" class="search-bar">
             <input type="text" name="query" placeholder="搜尋商品或店家">

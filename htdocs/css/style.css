@@ -704,3 +704,111 @@ main {
     background-color: #45a049; /* 當滑鼠滑過時改為較深的綠色 */
 }
 
+.register-btn {
+    background-color: #007bff; /* 藍色 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px; /* 橢圓形 */
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px; /* 與登入按鈕保持間距 */
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #0056b3; /* 滑鼠懸停時深藍色 */
+}
+
+/* 調整登入按鈕和註冊按鈕容器的對齊方式 */
+.submit-group {
+    display: flex;
+    justify-content: center; /* 讓按鈕位於中心 */
+    gap: 10px; /* 增加按鈕間的間距 */
+}
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+/* 新增商品按鈕圓弧形樣式 */
+/* 新增商品按鈕圓弧形樣式 */
+#add-product-btn {
+    display: inline-block;
+    background-color: #4CAF50; /* 綠色背景 */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px; /* 圓弧形 */
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-btn:hover {
+    background-color: #45a049; /* 當鼠標懸停時顯示深綠色 */
+}
+
+/* 商品列表樣式 */
+.product-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+.product-info {
+    width: 50%;  /* 控制圖片容器的大小 */
+    height: 50%;
+    overflow: hidden;  /* 隱藏超過容器的部分 */
+}
+
+.product-image {
+    width: 100%;   /* 填滿容器 */
+    height: 100%;  /* 填滿容器 */
+    object-fit: cover;  /* 保持比例，裁剪圖片 */
+    transition: transform 0.3s ease;  /* 平滑過渡效果 */
+}
+
+/* 控制修改按鈕顯示效果 */
+.product-info {
+    width: 83;  /* 控制圖片容器的大小 */
+    height: 41;
+    overflow: hidden;  /* 隱藏超過容器的部分 */
+}
+
+.product-image {
+    width: 100%;   /* 填滿容器 */
+    height: 100%;  /* 填滿容器 */
+    object-fit: cover;  /* 保持比例，裁剪圖片 */
+    transition: transform 0.3s ease;  /* 平滑過渡效果 */
+}
+
+/* 控制修改按鈕顯示效果 */
+
+.modify-button {
+    position: absolute;
+    bottom: -40px;  /* 修改按鈕從下方滑出 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745 !important; 
+    color: white;
+    border: none;
+    border-radius: 10px;  /* 圓角矩形 */
+    width: 100px;
+    height: 40px;
+    font-size: 16px;
+    display: none;  /* 默認隱藏 */
+    transition: bottom 0.3s ease;  /* 平滑過渡效果 */
+}
+
+.product-item:hover .modify-button {
+    display: block;
+    bottom: 0;  /* 滑出顯示 */
+}
+
+.product-item:hover .product-image {
+    transform: scale(1.1);  /* 當滑鼠靠近時圖片放大 */
+}
