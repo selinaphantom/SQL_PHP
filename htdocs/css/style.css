@@ -1,0 +1,878 @@
+/* 整體黑白主題樣式 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background-color: #000; /* 黑色背景 */
+}
+
+header {
+    background-color: #333;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo a {
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header .menu a,
+header .user-info span,
+header .user-info a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+header .search-bar {
+    display: flex;
+    align-items: center;
+}
+
+header .search-bar input {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+header .search-bar button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #fff;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+header .search-bar button:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+main {
+    padding: 20px;
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.product-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+    width: 200px;
+    border-radius: 8px;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.product-item h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.product-item p {
+    font-size: 16px;
+    color: #555;
+}
+
+.product-item button {
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.product-item button:hover {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+header .menu a {
+    color: #fff; /* 預設文字顏色為白色 */
+    text-decoration: none;
+    margin: 0 10px;
+    padding: 5px 10px; /* 增加 padding 以便有明顯的懸停效果 */
+    border-radius: 4px; /* 添加圓角 */
+    transition: all 0.3s ease; /* 平滑過渡效果 */
+}
+
+header .menu a:hover {
+    color: #fff; /* 滑鼠懸停時文字仍保持白色 */
+    background-color: #28a745; /* 背景變為綠色 */
+}
+.login-container {
+    text-align: center;
+}
+
+/* 登入盒子 */
+.login-box {
+    background-color: rgba(255, 255, 255, 0.1); /* 半透明白色背景 */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    width: 350px;
+}
+
+/* 標題 */
+.login-header h2 {
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+/* 輸入框群組 */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #28a745; /* 綠色框 */
+}
+
+/* 記住我選項 */
+.remember-me {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* 登入按鈕 */
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745; /* 綠色按鈕 */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #218838; /* 深綠色按鈕 */
+}
+
+/* 底部連結 */
+.footer-links {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #28a745; /* 綠色文字 */
+}
+
+.navbar h1 {
+    margin: 0;
+    color: #fff;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav-links .login-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-links .login-btn:hover {
+    background-color: #218838;
+}
+
+main {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+/* Modal 樣式 */
+.modal {
+    display: none; /* 預設不顯示 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.modal-content h2 {
+    margin: 0 0 20px;
+    color: #fff;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #28a745;
+}
+
+.remember-me {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.modal-login-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-login-btn:hover {
+    background-color: #218838;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+}
+
+.navbar .logo a {
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-bar button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #fff;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.menu a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.menu a:hover {
+    background-color: #28a745;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span {
+    margin-right: 10px;
+    color: #fff;
+}
+
+.user-info a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.user-info a:hover {
+    color: #28a745;
+}
+/* 個人資訊頁面樣式 */
+.profile {
+    padding: 20px;
+}
+
+.profile h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.profile-info, .coupons, .products-sold, .purchase-history {
+    margin-bottom: 20px;
+}
+
+.profile-info p {
+    font-size: 16px;
+}
+
+.coupons ul, .products-sold ul, .purchase-history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.coupons li, .products-sold li, .purchase-history li {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+/* 左側欄位（Sidebar） */
+.sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    height: 100vh;
+    border-right: 2px solid #ddd;
+}
+
+.sidebar h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #000; /* 設置標題字體顏色為黑色 */
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #000; /* 設置選單字體顏色為黑色 */
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover {
+    background-color: #ddd;
+}
+
+.sidebar a.active {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* 內容區域（Content Section） */
+.content-section {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000; /* 設置標題字體顏色為黑色 */
+}
+
+/* 顯示帳號資訊的區域 */
+.account-info {
+    color: #000; /* 設置帳號資訊文字顏色為黑色 */
+}
+
+.content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.content ul li {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #000; /* 設置內容文字顏色為黑色 */
+}
+
+/* 為每個內容項目加上邊框樣式 */
+.content-section section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc; /* 邊框顏色 */
+    border-radius: 8px; /* 圓角 */
+    background-color: #f9f9f9; /* 背景顏色 */
+}
+
+/* 每個列表項目的邊框 */
+.content-section ul li {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* 讓每個資料區塊的顏色略有區別，讓區塊更突出 */
+.content-section section:nth-child(odd) {
+    background-color: #e9e9e9;
+}
+/* 折價券的樣式 */
+.coupons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.coupon-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.coupon-item h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.coupon-item p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.coupon-item strong {
+    font-weight: bold;
+}
+/* 表格樣式 */
+.coupons-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.coupons-table th, .coupons-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.coupons-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #333;
+}
+
+.coupons-table td {
+    background-color: #fff;
+    color: #333;
+}
+
+.coupons-table tr:nth-child(even) td {
+    background-color: #f9f9f9; /* 隔行換色 */
+}
+
+.coupons-table tr:hover {
+    background-color: #f1f1f1; /* 滑鼠懸停時變色 */
+}
+/* 優惠券容器樣式 */
+.coupons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* 單個優惠券卡片樣式 */
+.coupon-card {
+    background-color: #f0f0f0; /* 淺灰色背景 */
+    border-radius: 10px; /* 圓角邊框 */
+    padding: 20px;
+    width: 250px; /* 卡片寬度 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    transition: transform 0.3s ease-in-out;
+    color: #333;
+}
+
+.coupon-card h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+}
+
+.coupon-card p {
+    font-size: 14px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.coupon-card:hover {
+    transform: translateY(-5px); /* 滑鼠懸停時輕微上升 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 滑鼠懸停時增強陰影效果 */
+}
+
+.coupon-card strong {
+    font-weight: bold;
+}
+/* 優惠券容器樣式 */
+.coupons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* 單個優惠券卡片樣式 */
+.coupon-card {
+    background-color: #f0f0f0; /* 淺灰色背景 */
+    border-radius: 10px; /* 圓角邊框 */
+    padding: 20px;
+    width: 350px; /* 卡片寬度 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    transition: transform 0.3s ease-in-out;
+    color: #333;
+    position: relative; /* 為了能夠定位按鈕 */
+}
+
+/* 優惠券卡片內文字樣式 */
+.coupon-card h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+}
+
+.coupon-card p {
+    font-size: 14px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.coupon-card:hover {
+    transform: translateY(-5px); /* 滑鼠懸停時輕微上升 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 滑鼠懸停時增強陰影效果 */
+}
+
+.coupon-card strong {
+    font-weight: bold;
+}
+
+/* 使用按鈕樣式 */
+.use-button {
+    background-color: #4CAF50; /* 綠色背景 */
+    color: white; /* 文字顏色為白色 */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px; /* 圓角矩形 */
+    font-size: 14px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px; /* 按鈕靠右，右邊距離調整為20px */
+    transform: translateY(-50%); /* 按鈕垂直居中 */
+    width: 80px; /* 按鈕寬度 */
+    text-align: center;
+}
+.use-button:hover {
+    background-color: #ff3700; /* 滑鼠懸停時改變顏色 */
+}
+
+.products h3 {
+    color: black;
+}
+
+/* 登入按鈕樣式 */
+.submit-group button {
+    background-color: #4CAF50; /* 綠色 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px; /* 橢圓形 */
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.submit-group button:hover {
+    background-color: #45a049; /* 當滑鼠滑過時改為較深的綠色 */
+}
+
+.register-btn {
+    background-color: #007bff; /* 藍色 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px; /* 橢圓形 */
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px; /* 與登入按鈕保持間距 */
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #0056b3; /* 滑鼠懸停時深藍色 */
+}
+
+/* 調整登入按鈕和註冊按鈕容器的對齊方式 */
+.submit-group {
+    display: flex;
+    justify-content: center; /* 讓按鈕位於中心 */
+    gap: 10px; /* 增加按鈕間的間距 */
+}
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+/* 新增商品按鈕圓弧形樣式 */
+#add-product-btn {
+    display: inline-block;
+    background-color: #4CAF50; /* 綠色背景 */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px; /* 圓弧形 */
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-btn:hover {
+    background-color: #45a049; /* 當鼠標懸停時顯示深綠色 */
+}
+
+/* 商品列表樣式 */
+/* 商品區容器 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 根據寬度自動換行，每個商品的最小寬度為200px */
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 單個商品卡片 */
+.product-item {
+    width: calc(100% / 6 - 10px); /* 確保每個商品占 1/6 的寬度 */
+    text-align: center; /* 文字置中 */
+    padding: 10px;
+    border: 1px solid #ccc; /* 加邊框方便檢視 */
+    box-sizing: border-box; /* 包含內距與邊框 */
+}
+
+.product-item:hover {
+    transform: translateY(-5px); /* 滑鼠懸停時向上移動 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 增強陰影 */
+}
+
+/* 商品圖片 */
+.product-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* 確保圖片不會變形 */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* 商品名稱 */
+.product-item h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* 商品描述 */
+.product-item p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* 商品價格 */
+.product-item .price {
+    font-size: 16px;
+    color: #28a745; /* 綠色價格 */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* 操作按鈕 */
+.product-item button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 25px; /* 更柔和的按鈕形狀 */
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.product-item button:hover {
+    background-color: #218838; /* 滑鼠懸停時變深綠 */
+}
+
+/* 手機響應式調整 */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 調整商品卡片大小 */
+    }
+
+    .product-item img {
+        height: 150px; /* 降低圖片高度 */
+    }
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* 水平置中 */
+    gap: 10px; /* 商品間距 */
+    padding: 20px;
+}
+/* Modal 背景 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal 內容 */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* 關閉按鈕 */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
