@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： localhost:3300
--- 產生時間： 2025-01-06 15:22:24
+-- 產生時間： 2025-01-07 01:03:21
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -32,6 +32,23 @@ CREATE TABLE `category` (
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- 傾印資料表的資料 `category`
+--
+
+INSERT INTO `category` (`category_id`, `name`) VALUES
+(1, '女性用品'),
+(2, '男性用品'),
+(3, '電器用品'),
+(4, '家具用品'),
+(5, '3C產品'),
+(6, '食品'),
+(7, '模型'),
+(8, '玩具'),
+(9, '書籍'),
+(10, '手機'),
+(11, '衣裝');
+
 -- --------------------------------------------------------
 
 --
@@ -45,8 +62,16 @@ CREATE TABLE `coupon` (
   `end_date` datetime NOT NULL,
   `type` int(11) NOT NULL,
   `discount` double NOT NULL,
-  `limit_money` int(11) NOT NULL
+  `limit_money` int(11) NOT NULL,
+  `code` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 傾印資料表的資料 `coupon`
+--
+
+INSERT INTO `coupon` (`ID`, `member_id`, `start_date`, `end_date`, `type`, `discount`, `limit_money`, `code`) VALUES
+(1, 14, '2025-01-07 00:33:07', '2025-01-07 00:33:07', 12, 100, 0, '9963');
 
 -- --------------------------------------------------------
 
@@ -56,8 +81,9 @@ CREATE TABLE `coupon` (
 
 CREATE TABLE `credit_card` (
   `customer_id` int(11) NOT NULL,
-  `credit_card` int(11) NOT NULL,
-  `credit_code` int(11) NOT NULL
+  `credit_card` int(16) NOT NULL,
+  `credit_code` int(16) NOT NULL,
+  `credit_card_expiry` int(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -78,7 +104,15 @@ CREATE TABLE `image_product` (
 INSERT INTO `image_product` (`ID`, `image_path`) VALUES
 (10, 'img/677bce1c0354c.png'),
 (11, 'img/677bce5f5541d.png'),
-(12, 'img/677be4d8cc893.jpeg');
+(12, 'img/677be4d8cc893.jpeg'),
+(13, 'img/677c00a51975e.png'),
+(14, 'img/677c0b0ee7752.png'),
+(15, 'img/product_677c2317099b64.28626945.png'),
+(16, 'img/677c0e9734520.png'),
+(17, 'img/677c1069a3b6d.png'),
+(18, 'img/product_677c2348a2a4f1.61656715.png'),
+(19, 'img/677c23290c542.png'),
+(20, 'img/677c23394894f.png');
 
 -- --------------------------------------------------------
 
@@ -90,7 +124,8 @@ CREATE TABLE `list_items` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quatity` int(11) NOT NULL,
-  `note` varchar(255) NOT NULL
+  `note` varchar(255) NOT NULL,
+  `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -103,6 +138,14 @@ CREATE TABLE `list_liked` (
   `customer_id` int(11) NOT NULL,
   `seller_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 傾印資料表的資料 `list_liked`
+--
+
+INSERT INTO `list_liked` (`customer_id`, `seller_id`) VALUES
+(13, 13),
+(14, 13);
 
 -- --------------------------------------------------------
 
@@ -156,7 +199,7 @@ INSERT INTO `member` (`ID`, `Name`, `username`, `password`, `member_status`, `ph
 
 CREATE TABLE `order_` (
   `ID` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
   `coupon_id` int(11) NOT NULL,
   `seller_id` int(11) NOT NULL,
   `order_date` datetime NOT NULL,
@@ -167,6 +210,19 @@ CREATE TABLE `order_` (
   `fee` int(11) NOT NULL,
   `taking_method` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 傾印資料表的資料 `order_`
+--
+
+INSERT INTO `order_` (`ID`, `customer_id`, `coupon_id`, `seller_id`, `order_date`, `ship_date`, `payment_method`, `status`, `address`, `fee`, `taking_method`) VALUES
+(1, 13, 0, 13, '2025-01-07 07:25:09', '2025-01-07 07:25:09', 'paypal', 0, 'Taiwan', 2, 'CowPee速送6小時'),
+(2, 13, 0, 13, '2025-01-07 07:25:53', '2025-01-07 07:25:53', 'credit_card', 0, 'Taiwan', 123, 'CowPee速送6小時'),
+(3, 13, 0, 0, '2025-01-07 07:26:16', '2025-01-07 07:26:16', 'credit_card', 0, 'Taiwan', 0, 'CowPee速送6小時'),
+(4, 13, 0, 13, '2025-01-07 07:28:36', '2025-01-07 07:28:36', 'credit_card', 0, '新福十六街', 2, 'CowPee速送6小時'),
+(5, 13, 0, 13, '2025-01-07 07:29:15', '2025-01-07 07:29:15', 'paypal', 0, 'Taiwan', 123, 'CowPee速送6小時'),
+(6, 13, 0, 13, '2025-01-07 07:30:17', '2025-01-07 07:30:17', 'cash_on_delivery', 0, 'Taiwan', 2, 'family_mart'),
+(7, 13, 0, 13, '2025-01-07 07:32:23', '2025-01-07 07:32:23', 'paypal', 0, 'Taiwan', 2, 'CowPee速送6小時');
 
 -- --------------------------------------------------------
 
@@ -185,16 +241,20 @@ CREATE TABLE `product` (
   `Mdata` datetime NOT NULL,
   `Status` int(11) NOT NULL,
   `Is_deleted` tinyint(1) NOT NULL,
-  `Category` varchar(255) NOT NULL
+  `Category_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 傾印資料表的資料 `product`
 --
 
-INSERT INTO `product` (`product_id`, `Seller_id`, `Product_name`, `Price`, `num`, `Description`, `Publish_data`, `Mdata`, `Status`, `Is_deleted`, `Category`) VALUES
-(11, 13, '123', 123, 123, '123', '2025-01-06 05:36:47', '2025-01-06 13:36:47', 0, 0, '123'),
-(12, 13, 'asc', 1231, 11, '123', '2025-01-06 07:12:40', '2025-01-06 15:12:40', 0, 0, '男性用品');
+INSERT INTO `product` (`product_id`, `Seller_id`, `Product_name`, `Price`, `num`, `Description`, `Publish_data`, `Mdata`, `Status`, `Is_deleted`, `Category_id`) VALUES
+(15, 13, '123', 123, 122, '123', '2025-01-06 23:10:52', '2025-01-06 18:07:09', 0, 0, '4'),
+(16, 13, '123', 2, -7, '2', '2025-01-06 22:59:20', '2025-01-06 18:10:47', 0, 0, '11'),
+(17, 13, '123', 123, 113, '我愛吃甜甜圈', '2025-01-06 22:45:01', '2025-01-06 18:18:33', 0, 0, '1'),
+(18, 13, '123', 123333, 50, '123', '2025-01-06 18:42:07', '2025-01-06 18:22:29', 0, 0, '1'),
+(19, 13, '123', 123, 123, '123', '2025-01-06 11:38:33', '2025-01-06 19:38:33', 0, 0, '11'),
+(20, 13, '1231', 123, 123, '123', '2025-01-06 11:38:49', '2025-01-06 19:38:49', 0, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -205,17 +265,6 @@ INSERT INTO `product` (`product_id`, `Seller_id`, `Product_name`, `Price`, `num`
 CREATE TABLE `seller` (
   `member_id` int(11) NOT NULL,
   `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `seller_category`
---
-
-CREATE TABLE `seller_category` (
-  `seller_id` int(11) NOT NULL,
-  `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -240,12 +289,6 @@ CREATE TABLE `specified_product` (
 ALTER TABLE `category`
   ADD PRIMARY KEY (`name`),
   ADD UNIQUE KEY `category_id` (`category_id`);
-
---
--- 資料表索引 `coupon`
---
-ALTER TABLE `coupon`
-  ADD PRIMARY KEY (`ID`);
 
 --
 -- 資料表索引 `image_product`
@@ -298,12 +341,6 @@ ALTER TABLE `seller`
   ADD PRIMARY KEY (`member_id`);
 
 --
--- 資料表索引 `seller_category`
---
-ALTER TABLE `seller_category`
-  ADD PRIMARY KEY (`seller_id`,`category_id`);
-
---
 -- 資料表索引 `specified_product`
 --
 ALTER TABLE `specified_product`
@@ -312,6 +349,18 @@ ALTER TABLE `specified_product`
 --
 -- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
 --
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `category`
+--
+ALTER TABLE `category`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `list_items`
+--
+ALTER TABLE `list_items`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `member`
@@ -323,13 +372,13 @@ ALTER TABLE `member`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_`
 --
 ALTER TABLE `order_`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -61,7 +61,7 @@ if (isset($_POST['add_product'])) {
     $isDeleted = 0; // 預設為未刪除
 
     // 插入新商品到資料庫
-    $insertStmt = $conn->prepare("INSERT INTO product (Seller_id, Product_name, Price, num, Description, Publish_data, Mdata, Status, Is_deleted, Category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $insertStmt = $conn->prepare("INSERT INTO product (Seller_id, Product_name, Price, num, Description, Publish_data, Mdata, Status, Is_deleted, Category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $insertStmt->bind_param("isdisssiss", $sellerID, $productName, $price, $num, $description, $publishDate, $publishDate, $status, $isDeleted, $category);
 
     if ($insertStmt->execute()) {
@@ -78,6 +78,8 @@ if (isset($_POST['add_product'])) {
                         alert('商品與圖片新增成功！');
                         window.location.href = 'profile.php'; // 成功後回到個人資料頁
                       </script>";
+                      $insertCategoryStmt = $conn->prepare("INSERT INTO seller_category (seller_id, category_id) VALUES (?, ?)");
+                      $insertCategoryStmt->bind_param("ii", $product_id, $category);
             } else {
                 echo "圖片儲存失敗，請稍後再試！";
             }
@@ -91,6 +93,9 @@ if (isset($_POST['add_product'])) {
         echo "新增商品失敗，請稍後再試！";
     }
 }
+$categoryQuery = "SELECT category_id, name FROM category";
+$categoryResult = $conn->query($categoryQuery);
+
 ?>
 
 <!DOCTYPE html>
@@ -107,36 +112,43 @@ if (isset($_POST['add_product'])) {
             margin: 0;
             padding: 0;
         }
+
         .form-container {
             background-color: #fff;
             padding: 20px;
             margin: 50px auto;
-            width: 80%;
+            width: 60%; /* 修改寬度來縮小表單 */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             text-align: center;
             margin-bottom: 30px;
         }
+
         label {
-            font-size: 1.1em;
+            font-size: 1em; /* 輸入框標題文字大小縮小 */
             margin-bottom: 5px;
             display: inline-block;
+            color: black; /* 修改標題文字顏色為黑色 */
         }
+
         input[type="text"],
         input[type="number"],
         textarea,
         select,
         input[type="file"] {
-            width: 100%;
-            padding: 12px;
+            width: 50%;
+            padding: 10px; /* 修改內邊距來縮小輸入框 */
             margin: 8px 0;
-            border-radius: 20px; /* 圓角 */
+            border-radius: 10px; /* 圓角 */
             border: 1px solid #ccc;
-            font-size: 1.1em;
+            font-size: 1em; /* 修改字型大小來縮小輸入框 */
             box-sizing: border-box;
+            color: black;
         }
+
         button[type="submit"] {
             background-color: #4CAF50;
             color: white;
@@ -148,17 +160,21 @@ if (isset($_POST['add_product'])) {
             width: 100%;
             margin-top: 20px;
         }
+
         button[type="submit"]:hover {
             background-color: #45a049;
         }
+
         textarea {
-            height: 150px;
+            height: 100px; /* 修改 textarea 的高度 */
         }
+
         .input-container {
             display: flex;
             flex-direction: column;
             margin-bottom: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -187,7 +203,12 @@ if (isset($_POST['add_product'])) {
             <textarea name="description" id="description" required></textarea>
             <br>
             <label for="category">商品分類：</label>
-            <input type="text" name="category" id="category" required>
+            <select name="category" id="category" required>
+                <?php 
+                while ($category = $categoryResult->fetch_assoc()): ?>
+                    <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
+                <?php endwhile; ?>
+            </select>
             <br>
             <label for="product_image">商品圖片：</label>
             <input type="file" name="product_image" id="product_image" accept="image/*" required>

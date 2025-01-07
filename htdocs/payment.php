@@ -6,20 +6,150 @@ if (!$isLoggedIn) {
     exit();
 }
 
-// 假設購物車資料存在於 session 中
-$cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+$userID = $_SESSION['user_id']; // 假設使用者的 user_id 儲存在 session 中
+
+// 連接資料庫
+$conn = new mysqli("localhost:3300", "root", "", "cowpee");
+if ($conn->connect_error) {
+    die("資料庫連接失敗：" . $conn->connect_error);
+}
+
+// 查詢該使用者的購物車資料
+$sql = "SELECT li.product_id, li.quatity, p.Product_name, p.Price, p.Seller_id  
+        FROM list_items li
+        JOIN product p ON li.product_id = p.product_id
+        WHERE li.customer_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userID);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// 將資料存入陣列
+$cartItems = [];
+$sellerIDs = [];
+while ($row = $result->fetch_assoc()) {
+    $cartItems[] = $row;
+    $sellerIDs[] = $row['Seller_id']; // 儲存賣家 ID
+}
 
 // 計算總價
 $totalPrice = array_sum(array_map(function ($item) {
-    return $item['price'] * $item['quantity'];
+    return $item['Price'] * $item['quatity'];
 }, $cartItems));
+
+// 檢查是否有儲存信用卡資訊
+$sql_card = "SELECT credit_card, credit_card_expiry, credit_card FROM credit_card WHERE customer_id = ?";
+$stmt_card = $conn->prepare($sql_card);
+$stmt_card->bind_param("i", $userID);
+$stmt_card->execute();
+$cardResult = $stmt_card->get_result();
+$cardInfo = $cardResult->fetch_assoc();
+
+// 處理信用卡資訊的儲存
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $phone = $_POST['phone'];
+    $paymentMethod = $_POST['payment_method'];
+    $couponCode = $_POST['coupon'] ?? null; // 優惠券代碼
+
+    // 優惠券檢查
+    $couponID = null;
+    if ($couponCode) {
+        $couponSql = "SELECT ID FROM coupon WHERE code = ?";
+        $couponStmt = $conn->prepare($couponSql);
+        $couponStmt->bind_param("s", $couponCode);
+        $couponStmt->execute();
+        $couponResult = $couponStmt->get_result();
+        if ($couponRow = $couponResult->fetch_assoc()) {
+            $couponID = $couponRow['ID'];
+        }
+    }
+
+    // 設定運送方式（如果付款方式不是貨到付款）
+    $shippingMethod = ($paymentMethod !== "cash_on_delivery") ? "CowPee速送6小時" : $_POST['shipping_method'];
+
+    // 計算費用（假設費用等於總價）
+    $fee = $totalPrice;
+
+    // 得到賣家ID
+    $sellerID = reset($sellerIDs); // 假設所有商品來自同一賣家，如果不是，需進行其他處理
+
+    // 建立訂單
+    $insertOrderSql = "INSERT INTO order_ (customer_id, payment_method, ship_date, fee, taking_method, address, order_date, seller_id) 
+                       VALUES (?, ?, NOW(), ?, ?, ?, NOW(), ?)";
+    $insertOrderStmt = $conn->prepare($insertOrderSql);
+    $insertOrderStmt->bind_param("isissi", $userID, $paymentMethod, $fee, $shippingMethod, $address, $sellerID);
+    $insertOrderStmt->execute();
+
+    // 獲取新訂單的 order_id
+    $orderID = $conn->insert_id;
+
+    // 更新 list_items 表格中的 order_id
+    $updateOrderIDSql = "UPDATE list_items SET order_id = ? WHERE customer_id = ?";
+    $updateOrderIDStmt = $conn->prepare($updateOrderIDSql);
+    $updateOrderIDStmt->bind_param("ii", $orderID, $userID);
+    $updateOrderIDStmt->execute();
+
+    // 扣除每個商品的數量
+    foreach ($cartItems as $item) {
+        $productID = $item['product_id'];
+        $quantityBought = $item['quantity'];
+
+        // 查詢產品的現有庫存數量
+        $productSql = "SELECT num FROM product WHERE product_id = ?";
+        $productStmt = $conn->prepare($productSql);
+        $productStmt->bind_param("i", $productID);
+        $productStmt->execute();
+        $productResult = $productStmt->get_result();
+        $product = $productResult->fetch_assoc();
+
+        if ($product) {
+            $newQuantity = $product['num'] - $quantityBought;
+
+            // 更新產品的剩餘庫存數量
+            $updateProductSql = "UPDATE product SET num = ? WHERE product_id = ?";
+            $updateProductStmt = $conn->prepare($updateProductSql);
+            $updateProductStmt->bind_param("ii", $newQuantity, $productID);
+            $updateProductStmt->execute();
+        }
+    }
+
+    // 如果選擇記住信用卡資訊，新增信用卡資料
+    if ($_POST['remember-card-info'] == 1) {
+        $cardNumber = $_POST['card-number'];
+        $expiryMonth = $_POST['expiry-month'];
+        $securityCode = $_POST['security-code'];
+
+        // 插入新的信用卡資料
+        $insertCardSql = "INSERT INTO credit_card (customer_id, credit_card, credit_code) 
+                          VALUES (?, ?, ?)";
+        $insertCardStmt = $conn->prepare($insertCardSql);
+        $insertCardStmt->bind_param("iii", $userID, $cardNumber, $securityCode);
+        $insertCardStmt->execute();
+    }
+
+    // 清除購物車
+    $clearCartSql = "DELETE FROM list_items WHERE customer_id = ?";
+    $clearCartStmt = $conn->prepare($clearCartSql);
+    $clearCartStmt->bind_param("i", $userID);
+    $clearCartStmt->execute();
+
+    // 顯示付款成功訊息並重定向到首頁
+    echo "<script>alert('付款成功！感謝您的訂購。'); window.location.href = 'index.php';</script>";
+    exit();
+}
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>付款 - CowPee購物</title>
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style_payment.css">
 </head>
 <body>
@@ -54,12 +184,12 @@ $totalPrice = array_sum(array_map(function ($item) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($cartItems as $id => $item): ?>
+                            <?php foreach ($cartItems as $item): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($item['name']) ?></td>
-                                    <td><?= $item['quantity'] ?></td>
-                                    <td>NT$<?= number_format($item['price'], 0) ?></td>
-                                    <td>NT$<?= number_format($item['price'] * $item['quantity'], 0) ?></td>
+                                    <td><?= htmlspecialchars($item['Product_name']) ?></td>
+                                    <td><?= $item['quatity'] ?></td>
+                                    <td>NT$<?= number_format($item['Price'], 0) ?></td>
+                                    <td>NT$<?= number_format($item['Price'] * $item['quatity'], 0) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -73,7 +203,7 @@ $totalPrice = array_sum(array_map(function ($item) {
                 <!-- 收件人資訊 -->
                 <div class="shipping-info">
                     <h3>收件人資訊</h3>
-                    <form action="process_payment.php" method="POST">
+                    <form action="" method="POST">
                         <label for="name">姓名：</label>
                         <input type="text" id="name" name="name" required class="input-field"><br><br>
                         <label for="address">地址：</label>
@@ -106,18 +236,18 @@ $totalPrice = array_sum(array_map(function ($item) {
                 <div id="credit-card-fields" class="credit-card-fields">
                     <h3>信用卡資訊</h3>
                     <label for="card-number">卡號</label>
-                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" class="input-field"><br>
+                    <input type="text" id="card-number" name="card-number" value="<?= htmlspecialchars($cardInfo['credit_card_number'] ?? '') ?>" placeholder="1234 5678 9012 3456" class="input-field"><br>
 
                     <label for="expiry-month">年/月</label>
-                    <input type="text" id="expiry-month" placeholder="MM/YY" class="input-field"><br>
+                    <input type="text" id="expiry-month" name="expiry-month" value="<?= htmlspecialchars($cardInfo['credit_card_expiry'] ?? '') ?>" placeholder="MM/YY" class="input-field"><br>
 
                     <label for="security-code">安全碼</label>
-                    <input type="text" id="security-code" placeholder="CVC" class="input-field"><br>
+                    <input type="text" id="security-code" name="security-code" value="<?= htmlspecialchars($cardInfo['credit_card_security_code'] ?? '') ?>" placeholder="CVC" class="input-field"><br>
 
                     <!-- 記住我的勾選框 -->
                     <div class="remember-me">
                         <label for="remember-card-info">記住我的信用卡資訊</label>
-                        <input type="checkbox" id="remember-card-info">
+                        <input type="checkbox" id="remember-card-info" name="remember-card-info" <?= isset($cardInfo['credit_card_number']) ? 'checked' : '' ?>>
                     </div>
                 </div>
 

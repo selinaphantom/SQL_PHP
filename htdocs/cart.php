@@ -6,22 +6,64 @@ if (!$isLoggedIn) {
     exit();
 }
 
-// 假設購物車資料存在於 session 中
-$cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+// 取得用戶 ID
+$userID = $_SESSION['user_id'];
+
+// 連接資料庫
+$conn = new mysqli("localhost:3300", "root", "", "cowpee");
+if ($conn->connect_error) {
+    die("資料庫連接失敗：" . $conn->connect_error);
+}
 
 // 處理數量增減和刪除操作
 if (isset($_GET['action'], $_GET['id'])) {
-    $id = $_GET['id'];
+    $itemID = intval($_GET['id']);
     if ($_GET['action'] == 'increase') {
-        $_SESSION['cart'][$id]['quantity'] += 1;
-    } elseif ($_GET['action'] == 'decrease' && $_SESSION['cart'][$id]['quantity'] > 1) {
-        $_SESSION['cart'][$id]['quantity'] -= 1;
+        $stmt = $conn->prepare("UPDATE list_items SET quatity = quatity + 1 WHERE order_id   = ? AND customer_id = ?");
+        $stmt->bind_param("ii", $itemID, $userID);
+        $stmt->execute();
+    } elseif ($_GET['action'] == 'decrease') {
+        $stmt = $conn->prepare("UPDATE list_items SET quatity = quatity - 1 WHERE order_id   = ? AND customer_id = ? AND quatity > 1");
+        $stmt->bind_param("ii", $itemID, $userID);
+        $stmt->execute();
     } elseif ($_GET['action'] == 'remove') {
-        unset($_SESSION['cart'][$id]);
+        $stmt = $conn->prepare("DELETE FROM list_items WHERE order_id  = ? AND customer_id = ?");
+        $stmt->bind_param("ii", $itemID, $userID);
+        $stmt->execute();
     }
     header("Location: cart.php");
     exit();
 }
+
+// 從 list_items 表讀取購物車資料
+$stmt = $conn->prepare("
+    SELECT 
+        li.order_id, 
+        li.quatity, 
+        p.Product_name, 
+        p.Price, 
+        ip.image_path 
+    FROM 
+        list_items li 
+    JOIN 
+        product p ON li.product_id = p.product_id 
+    JOIN 
+        image_product ip ON p.product_id = ip.ID 
+    WHERE 
+        li.customer_id = ?
+");
+
+if (!$stmt) {
+    die("SQL 錯誤：" . $conn->error);
+}
+
+$stmt->bind_param("i", $userID);
+$stmt->execute();
+$result = $stmt->get_result();
+$cartItems = $result->fetch_all(MYSQLI_ASSOC);
+
+
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +85,7 @@ if (isset($_GET['action'], $_GET['id'])) {
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: #000000; /* 黑色 */
+            background-color: #000000;
         }
 
         .logo a {
@@ -55,11 +97,11 @@ if (isset($_GET['action'], $_GET['id'])) {
         .menu a {
             margin-left: 20px;
             color: white;
-            text-decoration: none; /* 去除預設底線 */
+            text-decoration: none;
         }
 
         .menu a:hover {
-            text-decoration: none; /* 滑鼠懸停時也不顯示底線 */
+            text-decoration: none;
         }
 
         main {
@@ -145,7 +187,6 @@ if (isset($_GET['action'], $_GET['id'])) {
         .checkout-btn:hover {
             background-color: #e55b4e;
         }
-
     </style>
 </head>
 <body>
@@ -179,27 +220,26 @@ if (isset($_GET['action'], $_GET['id'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($cartItems as $id => $item): ?>
+                    <?php foreach ($cartItems as $item): ?>
                         <tr>
                             <td>
                                 <?php
-                                    // 檢查是否有 'image' 鍵值，若沒有則使用預設圖片
-                                    $imagePath = isset($item['image']) && file_exists('img/' . $item['image']) 
-                                        ? 'img/' . $item['image'] 
+                                    $imagePath = file_exists('img/' . $item['image_path']) 
+                                        ? 'img/' . $item['image_path'] 
                                         : 'img/CowPee.jpeg';
                                 ?>
-                                <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($item['name']) ?>">
-                                <?= htmlspecialchars($item['name']) ?>
+                                <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($item['Product_name']) ?>">
+                                <?= htmlspecialchars($item['Product_name']) ?>
                             </td>
                             <td class="quantity-controls">
-                                <a href="cart.php?action=increase&id=<?= $id ?>">+</a>
-                                <?= $item['quantity'] ?>
-                                <a href="cart.php?action=decrease&id=<?= $id ?>">-</a>
+                                <a href="cart.php?action=increase&id=<?= $item['order_id'] ?>">+</a>
+                                <?= $item['quatity'] ?>
+                                <a href="cart.php?action=decrease&id=<?= $item['order_id'] ?>">-</a>
                             </td>
-                            <td>NT$<?= number_format($item['price'], 0) ?></td>
-                            <td>NT$<?= number_format($item['price'] * $item['quantity'], 0) ?></td>
+                            <td>NT$<?= number_format($item['Price'], 0) ?></td>
+                            <td>NT$<?= number_format($item['Price'] * $item['quatity'], 0) ?></td>
                             <td>
-                                <a href="cart.php?action=remove&id=<?= $id ?>" class="remove-btn">刪除</a>
+                                <a href="cart.php?action=remove&id=<?= $item['order_id'] ?>" class="remove-btn">刪除</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -207,7 +247,7 @@ if (isset($_GET['action'], $_GET['id'])) {
             </table>
 
             <p class="total-price">總計：NT$<?= number_format(array_sum(array_map(function ($item) {
-                return $item['price'] * $item['quantity'];
+                return $item['Price'] * $item['quatity'];
             }, $cartItems)), 0) ?></p>
 
             <!-- 結帳連結 -->

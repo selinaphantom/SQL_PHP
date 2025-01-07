@@ -734,7 +734,6 @@ main {
     color: red;
 }
 /* 新增商品按鈕圓弧形樣式 */
-/* 新增商品按鈕圓弧形樣式 */
 #add-product-btn {
     display: inline-block;
     background-color: #4CAF50; /* 綠色背景 */
@@ -752,63 +751,128 @@ main {
 }
 
 /* 商品列表樣式 */
-.product-item {
-    display: flex;
-    align-items: center;
+/* 商品區容器 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 根據寬度自動換行，每個商品的最小寬度為200px */
+    gap: 20px;
     justify-content: center;
-    margin-bottom: 20px;
-    position: relative;
-}
-.product-info {
-    width: 50%;  /* 控制圖片容器的大小 */
-    height: 50%;
-    overflow: hidden;  /* 隱藏超過容器的部分 */
+    padding: 20px;
 }
 
-.product-image {
-    width: 100%;   /* 填滿容器 */
-    height: 100%;  /* 填滿容器 */
-    object-fit: cover;  /* 保持比例，裁剪圖片 */
-    transition: transform 0.3s ease;  /* 平滑過渡效果 */
+/* 單個商品卡片 */
+.product-item {
+    width: calc(100% / 6 - 10px); /* 確保每個商品占 1/6 的寬度 */
+    text-align: center; /* 文字置中 */
+    padding: 10px;
+    border: 1px solid #ccc; /* 加邊框方便檢視 */
+    box-sizing: border-box; /* 包含內距與邊框 */
 }
 
-/* 控制修改按鈕顯示效果 */
-.product-info {
-    width: 83;  /* 控制圖片容器的大小 */
-    height: 41;
-    overflow: hidden;  /* 隱藏超過容器的部分 */
+.product-item:hover {
+    transform: translateY(-5px); /* 滑鼠懸停時向上移動 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 增強陰影 */
 }
 
-.product-image {
-    width: 100%;   /* 填滿容器 */
-    height: 100%;  /* 填滿容器 */
-    object-fit: cover;  /* 保持比例，裁剪圖片 */
-    transition: transform 0.3s ease;  /* 平滑過渡效果 */
+/* 商品圖片 */
+.product-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* 確保圖片不會變形 */
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
-/* 控制修改按鈕顯示效果 */
+/* 商品名稱 */
+.product-item h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-.modify-button {
-    position: absolute;
-    bottom: -40px;  /* 修改按鈕從下方滑出 */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #28a745 !important; 
-    color: white;
-    border: none;
-    border-radius: 10px;  /* 圓角矩形 */
-    width: 100px;
-    height: 40px;
+/* 商品描述 */
+.product-item p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* 商品價格 */
+.product-item .price {
     font-size: 16px;
-    display: none;  /* 默認隱藏 */
-    transition: bottom 0.3s ease;  /* 平滑過渡效果 */
+    color: #28a745; /* 綠色價格 */
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
-.product-item:hover .modify-button {
-    display: block;
-    bottom: 0;  /* 滑出顯示 */
+/* 操作按鈕 */
+.product-item button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 25px; /* 更柔和的按鈕形狀 */
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.product-item:hover .product-image {
-    transform: scale(1.1);  /* 當滑鼠靠近時圖片放大 */
+.product-item button:hover {
+    background-color: #218838; /* 滑鼠懸停時變深綠 */
+}
+
+/* 手機響應式調整 */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 調整商品卡片大小 */
+    }
+
+    .product-item img {
+        height: 150px; /* 降低圖片高度 */
+    }
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* 水平置中 */
+    gap: 10px; /* 商品間距 */
+    padding: 20px;
+}
+/* Modal 背景 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal 內容 */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* 關閉按鈕 */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

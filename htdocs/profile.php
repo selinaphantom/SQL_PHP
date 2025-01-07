@@ -82,9 +82,39 @@ if (isset($_POST['update_password'])) {
         $messageClass = 'error'; // 設定為錯誤訊息類別
     }
 }
+$productsPerPage = 6; // 每頁顯示 6 個商品
+$totalProducts = count($products); // 總商品數量
+$totalPages = ceil($totalProducts / $productsPerPage); // 計算總頁數
 
+// 獲取當前頁數（如果沒有指定，默認為第 1 頁）
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$currentPage = max(1, min($currentPage, $totalPages)); // 確保頁碼在有效範圍內
+
+// 計算顯示的商品範圍
+$startIndex = ($currentPage - 1) * $productsPerPage;
+$endIndex = min($startIndex + $productsPerPage - 1, $totalProducts - 1);
+
+// 獲取當前頁的商品
+$currentPageProducts = array_slice($products, $startIndex, $productsPerPage);
 // 檢查用戶是否為賣家
 $isSeller = $userData['authority'] === '賣家權限';
+// 查詢購買紀錄
+$purchases = [];
+$buyerID = $userData['ID']; // 使用當前用戶的 ID
+
+$orderStmt = $conn->prepare("
+    SELECT o.ID , o.order_date, o.fee
+    FROM order_ o
+    WHERE o.ID = ?
+");
+$orderStmt->bind_param("i", $buyerID);
+$orderStmt->execute();
+$orderResult = $orderStmt->get_result();
+
+while ($order = $orderResult->fetch_assoc()) {
+    $purchases[] = $order;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -230,38 +260,56 @@ $isSeller = $userData['authority'] === '賣家權限';
         </section>
 
         <section id="sold-products" class="content" style="display: none;">
-            <h2>販售商品</h2>
-            <a href="add_product.php" id="add-product-btn" class="add-product-btn">新增商品</a>
+    <h2>販售商品</h2>
+    
+    <!-- 新增商品按鈕 -->
+    <a href="add_product.php" id="add-product-btn" class="add-product-btn">新增商品</a>
+    
+    <h3>我的商品：</h3>
+    <ul class="product-list">
+        <?php
+        // 查詢所有商品及其圖片和剩餘數量
+        $productStmt = $conn->prepare("SELECT p.Product_name, p.Price, i.image_path, p.num, p.product_id FROM product p LEFT JOIN image_product i ON p.product_id = i.ID WHERE p.Seller_id = ?");
+        $productStmt->bind_param("i", $userID);
+        $productStmt->execute();
+        $productResult = $productStmt->get_result();
 
-            <h3>我的商品：</h3>
-            <ul class="product-list">
-                <?php
-                // 查詢所有商品及其圖片和剩餘數量
-                $productStmt = $conn->prepare("SELECT p.Product_name, p.Price, i.image_path, p.num FROM product p LEFT JOIN image_product i ON p.product_id = i.ID WHERE p.Seller_id = ?");
-                $productStmt->bind_param("i", $userID);
-                $productStmt->execute();
-                $productResult = $productStmt->get_result();
-
-                while ($product = $productResult->fetch_assoc()) {
-                    $imagePath = $product['image_path'] ? $product['image_path'] : 'img/default.jpg'; // 若沒有圖片，顯示預設圖片
-                    $remainingQuantity = $product['num']; // 剩餘數量
-                    ?>
-                    <li class="product-item">
-                        <div class="product-info">
-                            <img src="<?php echo $imagePath; ?>" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <p><strong>名稱：</strong> <?php echo htmlspecialchars($product['Product_name']); ?></p>
-                                <p><strong>價格：</strong> NT$<?php echo htmlspecialchars($product['Price']); ?></p>
-                                <p class="product-quantity"><strong>剩餘數量：</strong> <?php echo $remainingQuantity; ?></p>
-                            </div>
-                        </div>
-                        <button class="modify-button">修改</button>
-                    </li>
-                    <?php
-                }
-                ?>
-            </ul>
-        </section>
+        while ($product = $productResult->fetch_assoc()) {
+            $imagePath = $product['image_path'] ? $product['image_path'] : 'img/default.jpg'; // 若沒有圖片，顯示預設圖片
+            $remainingQuantity = $product['num']; // 剩餘數量
+            $productId = $product['product_id']; // 商品ID
+            ?>
+            <li class="product-item">
+                <img src="<?php echo $imagePath; ?>" alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <p><strong>名稱：</strong> <?php echo htmlspecialchars($product['Product_name']); ?></p>
+                    <p><strong>價格：</strong> NT$<?php echo htmlspecialchars($product['Price']); ?></p>
+                    <p class="product-quantity"><strong>剩餘數量：</strong> <?php echo $remainingQuantity; ?></p>
+                </div>
+                <!-- 修改商品按鈕，點擊後導向編輯頁面 -->
+                <a href="edit_product.php?product_id=<?php echo $productId; ?>" class="modify-button">編輯</a>
+            </li>
+        <?php
+        }
+        ?>
+    </ul>
+</section>
+<section id="purchase-history" class="content" style="display: none;">
+    <h2>購買紀錄</h2>
+    <?php if (empty($orderResult)): ?>
+        <p>目前沒有購買紀錄。</p>
+    <?php else: ?>
+        <ul class="purchase-list">
+            <?php foreach ($purchases as $purchase): ?>
+                <li class="purchase-item">
+                    <p><strong>訂單編號：</strong> <?= htmlspecialchars($purchase['ID']) ?></p>
+                    <p><strong>訂購日期：</strong> <?= htmlspecialchars($purchase['order_date']) ?></p>
+                    <p><strong>總價格：</strong> NT$<?= htmlspecialchars($purchase['fee']) ?></p>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</section>
 
         </div>
     </main>
