@@ -25,5 +25,5 @@
 2. 啟動 XAMPP 控制面板，啟動 **Apache** 及 **MySQL** 服務。
 3. 將本專案的前端檔案（Shopping website front-end page）複製或移動到 XAMPP 安裝目錄下的 `htdocs` 資料夾中。
 4. 匯入資料庫：
-- 開啟瀏覽器，輸入 `http://localhost/phpmyadmin`。
+- 開啟瀏覽器，輸入 `http://localhost/phpmyadmin`，或從Xampp內建MySQL的Admin選項直接進入。
 - 然後匯入SQL內的sql。
